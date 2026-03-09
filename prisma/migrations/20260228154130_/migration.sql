@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Spots" ALTER COLUMN "code" DROP NOT NULL;

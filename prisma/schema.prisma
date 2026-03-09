@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Parking {
+  id        String    @id @default(uuid())
+  parking   String
+  location  String
+  capacity  Int
+  spots     Spots[]
+  createdAt DateTime  @default(now())
+}
+
+model Spots {
+  id        String    @id @default(uuid())
+  spot      String
+  code      String?
+  parking   Parking   @relation(fields: [parkingId], references: [id])
+  parkingId String
+  status    status    @default(Free)
+  tickets   Tickets[]
+  createdAt DateTime  @default(now())
+}
+
+model Tickets {
+  id           String    @id @default(uuid())
+  plateNumber  String
+  spotId       String
+  isCheckedOut Boolean
+  updatedAt    DateTime  @updatedAt
+  checkOutTime DateTime? @updatedAt
+  amountToPay  Int?      @default(0)
+  spot         Spots     @relation(fields: [spotId], references: [id])
+  createdAt    DateTime  @default(now())
+}
+
+enum status {
+  Free
+  Occupied
+}
